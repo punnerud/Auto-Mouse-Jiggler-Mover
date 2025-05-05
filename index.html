@@ -95,7 +95,7 @@
         .carousel-container {
             display: grid;
             grid-auto-flow: column;
-            grid-auto-columns: 180px;
+            grid-auto-columns: 200px;
             gap: 15px;
             overflow-x: auto;
             scrollbar-width: none;
@@ -117,7 +117,7 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             position: relative;
-            aspect-ratio: 0.46;
+            aspect-ratio: 1;
             height: auto;
             background-color: black;
         }
@@ -127,11 +127,8 @@
         .carousel-slide img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .carousel-slide.span-two img {
             object-fit: contain;
+            display: block;
             mix-blend-mode: normal;
             background-color: transparent;
         }
@@ -228,7 +225,7 @@
             <div class="carousel-slide">
                 <img src="/Auto-Mouse-Jiggler-Mover/static/p1.png" alt="Auto Mouse Jiggler App Screenshot 1">
             </div>
-            <div class="carousel-slide span-two">
+            <div class="carousel-slide">
                 <img src="/Auto-Mouse-Jiggler-Mover/static/p2.png" alt="Auto Mouse Jiggler App Screenshot 2">
             </div>
             <div class="carousel-slide">
