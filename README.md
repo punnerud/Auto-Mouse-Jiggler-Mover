@@ -1,1 +1,1 @@
-# Auto-Mouse-Jiggler-Mover
+# screenshot_deleter_page
