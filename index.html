@@ -318,6 +318,11 @@ p{margin:0}
 .stage[data-film="ready"] .play{display:inline-flex}
 .stage[data-film="ready"] .tag,.stage[data-film="playing"] .tag{display:none}
 .stage[data-film="ready"] .menubar,.stage[data-film="playing"] .menubar{display:none}
+/* Muted hero loop: the film plays at the top; a small button plays it with sound */
+.stage[data-film="looping"] .tag,.stage[data-film="looping"] .menubar{display:none}
+.stage[data-film="looping"] .play{display:inline-flex;left:auto;top:auto;right:2.5%;bottom:4%;transform:none;gap:9px;padding:6px 14px 6px 6px;font-size:14px}
+.stage[data-film="looping"] .play .pc{width:32px;height:32px}
+.stage[data-film="looping"] .play .pc svg{width:12px;height:12px}
 .stage-cap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 18px;margin-top:14px;font-size:14px;color:var(--ink-2)}
 .stage-cap b{color:var(--ink);font-weight:600}
 .cap-tools{display:flex;align-items:center;gap:16px}
@@ -618,7 +623,16 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
   .section{padding:80px 0}
   .section-head{margin-bottom:36px}
   .section-head p,.try-head p{font-size:17px}
-  .stage-wrap{margin:0 -4px}
+  .stage-wrap{margin:0 -4px;order:-1}
+  /* Film on top: keep the sound button small so it doesn't cover the film's text, and the caption compact */
+  .stage[data-film="looping"] .play{right:2%;bottom:3%;gap:6px;padding:3px 10px 3px 3px;font-size:12px}
+  .stage[data-film="looping"] .play .pc{width:24px;height:24px}
+  .stage[data-film="looping"] .play .pc svg{width:9px;height:9px;margin-left:2px}
+  .stage[data-film="looping"] .play small{display:none}
+  .stage-cap{margin-top:8px;gap:4px 12px;font-size:13px;flex-wrap:nowrap}
+  .stage-cap #film-cap{flex:1;min-width:0}
+  .motion{min-height:30px;padding:0 10px;font-size:12.5px}
+  .film-details{display:none}
   .stage{border-radius:12px}
   .tag{display:none}
   .play{padding:8px 16px 8px 8px;font-size:15px}
@@ -1159,7 +1173,13 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
 
   /* ---------- hero loop: visible pause/play, and it rests while off screen ---------- */
   var stage=$('#stage'), loopBtn=$('#loop-toggle'), loopLbl=$('[data-motion-label]'), userPaused=false;
-  function setLoop(paused){ stage.classList.toggle('paused', paused); }
+  function setLoop(paused){
+    stage.classList.toggle('paused', paused);
+    // The same control (and leaving the screen) pauses the muted film loop
+    if(typeof video!=='undefined' && video && stage.getAttribute('data-film')==='looping'){
+      if(paused){ video.pause(); } else { var p=video.play(); if(p&&p.catch){ p.catch(function(){}); } }
+    }
+  }
   loopBtn.addEventListener('click', function(){
     userPaused=!userPaused; setLoop(userPaused);
     loopBtn.setAttribute('aria-pressed', String(userPaused));
@@ -1174,8 +1194,14 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
   /* ---------- film: offered only once the file really exists; loads on click ---------- */
   var SRC='/static/video/amjm-preview.mp4',
       POSTER='/static/video/amjm-preview-poster.jpg',
+      LOOP='/static/video/amjm-preview-loop.mp4',            // 720p, no audio, ~1.3 MB: the muted hero loop
+      LOOP_POSTER='/static/video/amjm-preview-loop-poster.jpg',
       VTT='';
+  var conn=navigator.connection||{};
+  // Autoplay the muted loop unless the visitor asked for less motion or less data
+  function canAutoplay(){ return !reduce && !conn.saveData && !/(^|-)2g$/.test(conn.effectiveType||''); }
   var video=$('.film', stage), poster=$('[data-poster]', stage), playBtn=$('[data-play]', stage),
+      playLabel=playBtn.lastElementChild, PLAY_LABEL=playLabel.innerHTML,
       capTitle=$('[data-cap-title]'), capText=$('[data-cap-text]');
   function setFilm(s){ stage.setAttribute('data-film', s); }
   function filmReady(){
@@ -1189,10 +1215,34 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
     // The film has no speech and all its text is on screen, so there are no captions. Set VTT to a file
     // path to add a captions track later.
     if(VTT){ var t=d.createElement('track'); t.kind='captions'; t.srclang='en'; t.label='English'; t.src=VTT; video.appendChild(t); }
+    if(canAutoplay()){ startLoop(); }
   }
   function filmMissing(){ setFilm('missing'); }
+  function startLoop(){
+    setFilm('looping');
+    poster.src=LOOP_POSTER; poster.hidden=false;      // frame 0, so the switch to video is seamless
+    video.hidden=true; video.controls=false; video.loop=true;
+    video.muted=true; video.defaultMuted=true; video.setAttribute('muted','');
+    video.preload='auto';
+    if(video.getAttribute('src')!==LOOP){ video.src=LOOP; }
+    playLabel.innerHTML='Watch with sound<small>0:28</small>';
+    capText.textContent='· playing without sound.';
+    loopBtn.hidden=false; userPaused=false; loopBtn.setAttribute('aria-pressed','false');
+    loopBtn.setAttribute('aria-label','Pause film'); loopLbl.textContent='Pause';
+    var p=video.play(); if(p&&p.catch){ p.catch(stopLoop); }
+  }
+  function stopLoop(){
+    video.pause(); video.removeAttribute('src'); video.load(); video.hidden=true; video.loop=false;
+    loopBtn.hidden=true; playLabel.innerHTML=PLAY_LABEL;
+    poster.src=POSTER; capText.textContent='· sound plays only when you press play.';
+    setFilm('ready');
+  }
+  video.addEventListener('playing', function(){ if(stage.getAttribute('data-film')==='looping'){ video.hidden=false; } });
   function playFilm(how){
-    if(!video.getAttribute('src')){ video.src=SRC; }
+    if(video.getAttribute('src')!==SRC){ video.src=SRC; }
+    video.loop=false; video.removeAttribute('muted'); video.defaultMuted=false;
+    loopBtn.hidden=true; playLabel.innerHTML=PLAY_LABEL;
+    try{ video.currentTime=0; }catch(e){}
     video.hidden=false; video.controls=true; video.muted=false;
     setFilm('playing');
     var p=video.play(); if(p&&p.catch){ p.catch(function(){}); }
@@ -1200,8 +1250,14 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
     track('video_play',{link_location:how});
   }
   playBtn.addEventListener('click', function(){ playFilm('hero_button'); });
-  video.addEventListener('ended', function(){ video.controls=false; video.hidden=true; setFilm('ready'); playBtn.focus(); track('video_complete'); });
-  video.addEventListener('error', function(){ video.hidden=true; setFilm('ready'); }, true);
+  video.addEventListener('ended', function(){
+    track('video_complete');
+    if(canAutoplay()){ startLoop(); } else { video.controls=false; video.hidden=true; setFilm('ready'); }
+    playBtn.focus();
+  });
+  video.addEventListener('error', function(){
+    if(stage.getAttribute('data-film')==='looping'){ stopLoop(); } else { video.hidden=true; setFilm('ready'); }
+  }, true);
   $('[data-film-link]').addEventListener('click', function(e){
     e.preventDefault();
     var r=stage.getBoundingClientRect();
