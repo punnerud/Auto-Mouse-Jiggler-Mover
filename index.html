@@ -16,6 +16,12 @@
 <title>Auto Mouse Jiggler Mover – mouse jiggler for Mac</title>
 <meta name="description" content="A tiny mouse jiggler for Mac that lives in the menu bar. For when you step away to think, pace or stretch: a gentle 6-point circle that ends exactly where it started. Free on the Mac App Store.">
 <link rel="canonical" href="https://auto-mouse-jiggler-mover.com/">
+<meta name="apple-itunes-app" content="app-id=6740087205">
+<script>
+/* Safari on iPhone shows Apple's app banner (the tag above) with a direct download button.
+   Hide our own header there, so there aren't two app bars at the top. Other iPhone browsers show no banner. */
+(function(u){ if(/iPhone|iPod/.test(u) && /Safari\//.test(u) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\/|FBAN|FBAV|Instagram|Line\//.test(u)) document.documentElement.classList.add('ios-safari'); })(navigator.userAgent);
+</script>
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f6f7f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0c0f0d" media="(prefers-color-scheme: dark)">
@@ -230,6 +236,8 @@ p{margin:0}
 .badge img{width:211px;height:54px}
 
 /* ================= Header ================= */
+.ios-safari .site-head{display:none}
+.ios-safari{scroll-padding-top:12px}
 .site-head{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid transparent;transition:border-color .2s}
 .site-head.scrolled{border-bottom-color:var(--line)}
 .head-in{display:flex;align-items:center;gap:20px;height:var(--head-h)}
