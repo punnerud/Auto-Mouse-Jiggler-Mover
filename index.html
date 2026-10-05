@@ -68,13 +68,70 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is free to download. An optional in-app purchase or subscription unlocks extended stop timers and some extra features. The App Store shows the price in your own currency before you buy anything." } },
-    { "@type": "Question", "name": "Will it move my cursor away from what I am doing?", "acceptedAnswer": { "@type": "Answer", "text": "No. Each move is a tiny 6-point circle that ends exactly where it started. It pauses while you use the mouse or type, and with Let go when I move the mouse turned on, grabbing the mouse mid-circle stops it at once and leaves the cursor where you put it." } },
-    { "@type": "Question", "name": "Can it work without moving the cursor at all?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Set Jiggle Interval to Never and turn on Use Mac API activity (Accessibility) in Settings. The app then works through the macOS Accessibility API and the pointer does not move." } },
-    { "@type": "Question", "name": "Why does it ask for Accessibility permission?", "acceptedAnswer": { "@type": "Answer", "text": "macOS only lets apps you approve move the pointer, so the app asks once in System Settings, Privacy and Security, Accessibility. You can turn it off there at any time." } },
-    { "@type": "Question", "name": "Which Macs does it run on?", "acceptedAnswer": { "@type": "Answer", "text": "Any Mac with macOS 13.5 or later. It installs from the Mac App Store and lives in the menu bar, with no Dock icon." } },
-    { "@type": "Question", "name": "What data does it collect?", "acceptedAnswer": { "@type": "Answer", "text": "The app collects no data and needs no account; it runs locally on your Mac. This website uses Google Analytics to count visits." } },
-    { "@type": "Question", "name": "How do I stop it?", "acceptedAnswer": { "@type": "Answer", "text": "Click the menu bar icon and choose Stop, or use Set Timer to Stop and it ends on its own. Quit is always one click away in the same menu." } }
+    {
+      "@type": "Question",
+      "name": "Is it free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, it is free to download. An optional in-app purchase or subscription unlocks extended stop timers and some extra features. The App Store shows the price in your own currency before you buy anything."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will it move my cursor away from what I’m doing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Each move is a tiny 6-point circle that ends exactly where it started. It pauses while you use the mouse or type, and with Let go when I move the mouse turned on, grabbing the mouse mid-circle stops it at once and leaves the cursor where you put it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it work without moving the cursor at all?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Set Jiggle Interval to Never and turn on Use Mac API activity (Accessibility) in Settings. The app then works through the macOS Accessibility API and the pointer does not move."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does it ask for Accessibility permission?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "macOS only lets apps you approve move the pointer, so the app asks once in System Settings, Privacy and Security, Accessibility. You can turn it off there at any time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which Macs does it run on?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Any Mac with macOS 13.5 or later. It installs from the Mac App Store and lives in the menu bar, with no Dock icon."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What data does it collect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The app collects no data and needs no account; it runs locally on your Mac. This website uses Google Analytics to count visits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a Windows version?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not yet. We’re considering one: leave your email and we’ll tell you when it’s ready."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I stop it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Click the menu bar icon and choose Stop, or use Set Timer to Stop and it ends on its own. Quit is always one click away in the same menu."
+      }
+    }
   ]
 }
 </script>
@@ -161,6 +218,12 @@ p{margin:0}
 .btn .gdot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:none}
 .btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line-2)}
 .btn-ghost:hover{background:var(--surface-2);filter:none}
+/* Windows waitlist: a quiet link for everyone, a real button for Windows visitors */
+.win-hint{margin:12px 0 0;font-size:15px;color:var(--ink-2)}
+.win-btn{display:none}
+.is-windows .win-btn{display:inline-flex}
+.is-windows .win-hint{display:none}
+.final .win-hint{margin-top:14px}
 .btn[disabled]{opacity:.45;cursor:not-allowed;filter:none}
 
 /* Apple badge: official artwork, unmodified; clear space >= 1/4 of its height on every side */
@@ -627,6 +690,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
             <img src="https://toolbox.marketingtools.apple.com/api/badges/download-on-the-mac-app-store/black/en-us" width="211" height="54" alt="Download on the Mac App Store">
           </picture>
         </a>
+        <a class="btn btn-ghost win-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="hero-button"><svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14"><path fill="currentColor" d="M1 2.6l5.7-.8v5.5H1zm6.4-.9L15 .6v6.7H7.4zM1 8.1h5.7v5.5L1 12.8zm6.4 0H15v6.7l-7.6-1.1z"/></svg><span>Windows version: get notified</span></a>
         <a class="film-link" href="#film" data-film-link hidden><span class="pl" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1 .8v10.4L11 6z" fill="currentColor"/></svg></span><span>See it in 28 seconds</span></a>
       </div>
       <ul class="micro">
@@ -634,6 +698,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
         <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>macOS 13.5 or later</li>
         <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>No account</li>
       </ul>
+      <p class="win-hint">On Windows? <a href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="hero">Get notified when the Windows version is ready →</a></p>
       <figure class="hero-quote">
         <span class="av" aria-hidden="true">O</span>
         <div>
@@ -1002,6 +1067,10 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
           <p>The app collects no data and needs no account; it runs locally on your Mac. This website uses Google Analytics to count visits. Read the <a href="/privacy-policy/">privacy policy</a>.</p>
         </details>
         <details>
+          <summary>Is there a Windows version?</summary>
+          <p>Not yet. We’re considering one: <a href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="faq">leave your email</a> and we’ll tell you when it’s ready.</p>
+        </details>
+        <details>
           <summary>How do I stop it?</summary>
           <p>Click the menu bar icon and choose Stop, or use Set Timer to Stop and it ends on its own. Quit is always one click away in the same menu.</p>
         </details>
@@ -1027,6 +1096,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
       <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Optional in‑app purchase</li>
       <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>macOS 13.5 or later</li>
     </ul>
+    <a class="btn btn-ghost win-btn" style="margin-top:16px" href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="final-button"><svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14"><path fill="currentColor" d="M1 2.6l5.7-.8v5.5H1zm6.4-.9L15 .6v6.7H7.4zM1 8.1h5.7v5.5L1 12.8zm6.4 0H15v6.7l-7.6-1.1z"/></svg><span>Windows version: get notified</span></a>
+    <p class="win-hint">On Windows? <a href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="final">Get notified when it’s ready →</a></p>
   </div>
 </section>
 </main>
@@ -1042,6 +1113,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
         <a href="/privacy-policy/">Privacy policy</a>
         <a href="mailto:morten@punnerud.net">Contact: morten@punnerud.net</a>
         <a href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="footer">Mac App Store</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfVDUDKN8lu0HmJLteCW6PjozUb48HVQxxtcKK22VfcWuAqUQ/viewform?usp=pp_url&amp;entry.1750680720=Website" target="_blank" rel="noopener" data-win="footer">Windows version</a>
       </nav>
     </div>
     <p class="legal">This website uses Google Analytics to count visits; the app itself collects no data. Apple, the Apple logo, Mac, macOS and Mac App Store are trademarks of Apple Inc., registered in the U.S. and other countries. © 2026 Morten Punnerud-Engelstad.</p>
@@ -1068,6 +1140,10 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
 
   /* ---------- outbound + intent events ---------- */
   $$('[data-store]').forEach(function(a){ a.addEventListener('click', function(){ track('click_app_store',{link_location:a.getAttribute('data-store')}); }); });
+  // Windows visitors can't use the Mac app yet: show them the waitlist as a real button
+  var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+  if (/^Win/i.test(plat) || /Windows NT/.test(navigator.userAgent)) document.documentElement.classList.add('is-windows');
+  $$('[data-win]').forEach(function(a){ a.addEventListener('click', function(){ track('click_windows_waitlist',{link_location:a.getAttribute('data-win')}); }); });
   $$('[data-send]').forEach(function(a){ a.addEventListener('click', function(){ track('send_to_mac_open',{link_location:a.getAttribute('data-send')}); }); });
 
   /* ---------- header border on scroll ---------- */
