@@ -236,8 +236,24 @@ p{margin:0}
 .badge img{width:211px;height:54px}
 
 /* ================= Header ================= */
-.ios-safari .site-head{display:none}
+/* iPhone Safari: Apple's app banner sits at the top of the page. Our header stays out of the way until
+   that banner has scrolled off, then slides in (fixed, so nothing jumps). */
+.ios-safari .site-head{position:fixed;left:0;right:0;top:0;transform:translateY(-110%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+.ios-safari.ios-scrolled .site-head{transform:none;visibility:visible;transition:transform .25s ease}
+.ios-safari .site-head .cta-store{display:inline-flex}
+.ios-safari .site-head .cta-send{display:none}
 .ios-safari{scroll-padding-top:12px}
+.ios-nudge{position:fixed;z-index:70;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:12px 18px 12px 14px;border-radius:16px;background:var(--btn-bg);color:var(--btn-ink);box-shadow:0 0 0 0 rgba(52,199,89,.6),0 12px 30px -10px rgba(0,0,0,.45);font:600 15px/1.35 var(--font);text-align:left;display:flex;gap:10px;align-items:flex-start}
+.ios-nudge[hidden]{display:none}
+.ios-nudge .arr{flex:none;width:26px;height:26px;border-radius:50%;background:var(--green);color:#0f1411;display:grid;place-items:center;font-size:16px;line-height:1}
+.ios-nudge small{display:block;margin-top:3px;font-weight:500;font-size:13px;opacity:.85}
+.ios-nudge small a{color:inherit;text-decoration:underline}
+@media (prefers-reduced-motion:no-preference){
+  .ios-nudge{animation:nudge-glow 1.2s ease-out 3}
+  .ios-nudge .arr{animation:nudge-up .6s ease-in-out 6 alternate}
+}
+@keyframes nudge-glow{0%{box-shadow:0 0 0 0 rgba(52,199,89,.65),0 12px 30px -10px rgba(0,0,0,.45)}100%{box-shadow:0 0 0 16px rgba(52,199,89,0),0 12px 30px -10px rgba(0,0,0,.45)}}
+@keyframes nudge-up{from{transform:translateY(2px)}to{transform:translateY(-4px)}}
 .site-head{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid transparent;transition:border-color .2s}
 .site-head.scrolled{border-bottom-color:var(--line)}
 .head-in{display:flex;align-items:center;gap:20px;height:var(--head-h)}
@@ -690,10 +706,16 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
       <a href="#reviews">Reviews</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn cta-store" href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="header"><span class="gdot" aria-hidden="true"></span>Get it free</a>
+    <a class="btn cta-store" href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="header" data-nudge><span class="gdot" aria-hidden="true"></span>Get it free</a>
     <a class="btn cta-send" href="#send" data-send="header"><span class="gdot" aria-hidden="true"></span>Send to Mac</a>
   </div>
 </header>
+
+<div class="ios-nudge" id="ios-nudge" role="status" hidden>
+  <span class="arr" aria-hidden="true">↑</span>
+  <span>Tap <b>Get</b> in the banner above to download
+    <small>Don’t see it? <a href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="nudge">Open the App Store</a></small></span>
+</div>
 
 <main id="main">
 
@@ -1144,7 +1166,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
   <img src="/static/img/app_icon_64.png" width="38" height="38" alt="">
   <p class="t"><b>Auto Mouse Jiggler Mover</b><span>Free · macOS 13.5+</span></p>
   <a class="btn btn-ghost m-send" href="#send" data-send="sticky">Send to Mac</a>
-  <a class="btn" href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="sticky">Get it free</a>
+  <a class="btn" href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="sticky" data-nudge>Get it free</a>
 </div>
 
 <script>
@@ -1159,7 +1181,41 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
   function track(name, params){ try{ if(typeof gtag==='function') gtag('event', name, params||{}); }catch(e){} }
 
   /* ---------- outbound + intent events ---------- */
-  $$('[data-store]').forEach(function(a){ a.addEventListener('click', function(){ track('click_app_store',{link_location:a.getAttribute('data-store')}); }); });
+  var iosSafari=document.documentElement.classList.contains('ios-safari');
+  $$('[data-store]').forEach(function(a){ a.addEventListener('click', function(){
+    if(iosSafari && a.hasAttribute('data-nudge')) return;   // counted as ios_banner_nudge instead
+    track('click_app_store',{link_location:a.getAttribute('data-store')});
+  }); });
+
+  /* ---------- iPhone Safari: header after the banner scrolls off; "Get it free" points at the banner ---------- */
+  if(iosSafari){
+    var root=document.documentElement, head=$('.site-head'), nudge=$('#ios-nudge'), nudgeTimer=0, ticking=false, pending=false;
+    function showNudge(){
+      pending=false; clearTimeout(nudgeTimer); nudge.hidden=false;
+      nudgeTimer=setTimeout(function(){ nudge.hidden=true; }, 7000);
+    }
+    function onScroll(){
+      var down=window.scrollY>120;
+      root.classList.toggle('ios-scrolled', down);
+      if(down){ head.removeAttribute('inert'); } else { head.setAttribute('inert',''); }
+      if(pending && window.scrollY<10){ showNudge(); }               // arrived at the top, banner in view
+      else if(!pending && !nudge.hidden && window.scrollY>200){ nudge.hidden=true; }
+      ticking=false;
+    }
+    window.addEventListener('scroll', function(){ if(!ticking){ ticking=true; requestAnimationFrame(onScroll); } }, {passive:true});
+    onScroll();
+    $$('[data-nudge]').forEach(function(a){ a.addEventListener('click', function(e){
+      e.preventDefault();
+      if(window.scrollY<10){ showNudge(); }
+      else {
+        pending=true;
+        window.scrollTo({top:0, behavior:reduce?'auto':'smooth'});   // brings Apple's banner (with Get) back into view
+        setTimeout(function(){ if(pending){ showNudge(); } }, 1500);    // in case the scroll was interrupted
+      }
+      track('ios_banner_nudge',{link_location:a.getAttribute('data-store')});
+    }); });
+    nudge.addEventListener('click', function(e){ if(e.target.tagName!=='A'){ nudge.hidden=true; } });
+  }
   // Windows visitors can't use the Mac app yet: show them the waitlist as a real button
   var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
   if (/^Win/i.test(plat) || /Windows NT/.test(navigator.userAgent)) document.documentElement.classList.add('is-windows');
