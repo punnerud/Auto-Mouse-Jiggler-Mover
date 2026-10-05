@@ -1,21 +1,13 @@
 {
-    "name": "Screenshot Deleter",
-    "short_name": "Screenshot Deleter",
-    "description": "Clean up your phone by easily finding and deleting unwanted screenshots",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#2c3e50",
-    "icons": [
-        {
-            "src": "/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
-} 
+  "name": "Auto Mouse Jiggler Mover",
+  "short_name": "Mouse Jiggler",
+  "description": "A tiny menu bar app for Mac for when you step away to think, pace or stretch.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f6f7f5",
+  "theme_color": "#1f8a3c",
+  "icons": [
+    { "src": "/static/img/app_icon_256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "/static/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

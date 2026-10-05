@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://screenshotdeleter.com/sitemap.xml
+Sitemap: https://auto-mouse-jiggler-mover.com/sitemap.xml
