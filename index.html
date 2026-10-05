@@ -751,8 +751,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
         </span>
         <details class="film-details" data-film-only hidden>
           <summary>What’s in the film (text version)</summary>
-          <!-- CHECK AGAINST THE FINAL CUT before launch -->
-          <p>A light Mac desktop. The menu bar icon is clicked and turns green. The pointer draws a tiny circle and comes to rest exactly where it began. The menu shows the jiggle interval and a stop timer, and Settings shows the new 1.5.4 options. Sequences shortened.</p>
+          <p>“Step away.” A green ring becomes the menu bar icon, and the real menu opens: Stop, Jiggle Interval, Cancel Stop Timer, “Stops in: 8h 30m”. Think. Pace. Stretch. Stay engaged during breaks. A magnifier shows the tiny circle the cursor draws and how it returns to the same spot. Pick your rhythm: 10 seconds to 24 hours. Set a stop time (in-app purchase). In Settings: it starts when the app opens, pauses when you lock the screen, waits while you type, and lets go when you move the mouse. Set it. Forget it. It ends on the app icon, with the note that timers over 25 min and some features require in-app purchase or subscription. Sequences shortened; the circle is shown enlarged.</p>
         </details>
       </figcaption>
     </figure>
@@ -1175,7 +1174,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
   /* ---------- film: offered only once the file really exists; loads on click ---------- */
   var SRC='/static/video/amjm-preview.mp4',
       POSTER='/static/video/amjm-preview-poster.jpg',
-      VTT='/static/video/amjm-preview.en.vtt';
+      VTT='';
   var video=$('.film', stage), poster=$('[data-poster]', stage), playBtn=$('[data-play]', stage),
       capTitle=$('[data-cap-title]'), capText=$('[data-cap-text]');
   function setFilm(s){ stage.setAttribute('data-film', s); }
@@ -1187,9 +1186,9 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
     capTitle.textContent='The 28-second film';
     capText.textContent='· sound plays only when you press play.';
     $$('[data-film-only], [data-film-link]').forEach(function(el){ el.hidden=false; });
-    fetch(VTT,{method:'HEAD'}).then(function(r){
-      if(r.ok){ var t=d.createElement('track'); t.kind='captions'; t.srclang='en'; t.label='English'; t.src=VTT; video.appendChild(t); }
-    }).catch(function(){});
+    // The film has no speech and all its text is on screen, so there are no captions. Set VTT to a file
+    // path to add a captions track later.
+    if(VTT){ var t=d.createElement('track'); t.kind='captions'; t.srclang='en'; t.label='English'; t.src=VTT; video.appendChild(t); }
   }
   function filmMissing(){ setFilm('missing'); }
   function playFilm(how){
