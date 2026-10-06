@@ -243,8 +243,11 @@ p{margin:0}
 .ios-safari .site-head .cta-store{display:inline-flex}
 .ios-safari .site-head .cta-send{display:none}
 .ios-safari{scroll-padding-top:12px}
-.ios-nudge{position:fixed;z-index:70;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:12px 18px 12px 14px;border-radius:16px;background:var(--btn-bg);color:var(--btn-ink);box-shadow:0 0 0 0 rgba(52,199,89,.6),0 12px 30px -10px rgba(0,0,0,.45);font:600 15px/1.35 var(--font);text-align:left;display:flex;gap:10px;align-items:flex-start}
+.ios-nudge{position:fixed;z-index:70;top:calc(14px + env(safe-area-inset-top));left:auto;right:calc(25.5vw - 31px);width:max-content;max-width:calc(74.5vw + 15px);padding:12px 18px 12px 16px;border-radius:16px;background:var(--btn-bg);color:var(--btn-ink);box-shadow:0 0 0 0 rgba(52,199,89,.6),0 12px 30px -10px rgba(0,0,0,.45);font:600 15px/1.35 var(--font);text-align:left;display:flex;gap:10px;align-items:flex-start}
 .ios-nudge[hidden]{display:none}
+/* Apple's banner puts Get at about 74.5 % of the width and the close × further right:
+   the arrow sits at the pill's right end, right under Get, with a caret pointing up at it */
+.ios-nudge::before{content:"";position:absolute;top:-7px;right:24px;border:7px solid transparent;border-top:0;border-bottom-color:var(--btn-bg)}
 .ios-nudge .arr{flex:none;width:26px;height:26px;border-radius:50%;background:var(--green);color:#0f1411;display:grid;place-items:center;font-size:16px;line-height:1}
 .ios-nudge small{display:block;margin-top:3px;font-weight:500;font-size:13px;opacity:.85}
 .ios-nudge small a{color:inherit;text-decoration:underline}
@@ -712,9 +715,9 @@ footer{border-top:1px solid var(--line);padding:40px 0 48px;font-size:14px;color
 </header>
 
 <div class="ios-nudge" id="ios-nudge" role="status" hidden>
-  <span class="arr" aria-hidden="true">↑</span>
   <span>Tap <b>Get</b> in the banner above to download
     <small>Don’t see it? <a href="https://apps.apple.com/app/apple-store/id6740087205?pt=2130700&amp;ct=website&amp;mt=8" data-store="nudge">Open the App Store</a></small></span>
+  <span class="arr" aria-hidden="true">↑</span>
 </div>
 
 <main id="main">
